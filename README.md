@@ -80,7 +80,7 @@ Trade-offs:
 
 ✅ Enables silent token refresh
 
-❌ Slightly less secure than in-memory storage (acceptable for this assignment)
+❌ Slightly less secure than in-memory storage 
 
 Test Users
 
