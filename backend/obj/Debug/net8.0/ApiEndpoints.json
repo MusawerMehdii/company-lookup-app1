@@ -1,0 +1,64 @@
+[
+  {
+    "ContainingType": "CleanCompanyAPi.Controllers.CompaniesController",
+    "Method": "Search",
+    "RelativePath": "api/companies",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "query",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CleanCompanyAPi.Controllers.CompaniesController",
+    "Method": "GetByOrgNumber",
+    "RelativePath": "api/companies/{orgnr}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orgnr",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CompanyApiClean.Controllers.MeController",
+    "Method": "Get",
+    "RelativePath": "api/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CompanyApiClean.Controllers.PingController",
+    "Method": "Public",
+    "RelativePath": "api/ping/public",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CompanyApiClean.Controllers.PingController",
+    "Method": "Secure",
+    "RelativePath": "api/ping/secure",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]
