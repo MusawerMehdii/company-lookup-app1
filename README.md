@@ -216,18 +216,3 @@ Swagger disabled in production scenarios
 Backend root (/) intentionally returns 404
 
 All API interaction is done through secured endpoints
-
-
----
-
-# 🔥 NOW FIX GIT PROPERLY
-
-Since you had merge conflicts:
-
-Run:
-
-```bash
-git add README.md
-git commit -m "Resolve README merge conflict and clean documentation"
-git pull origin main --allow-unrelated-histories
-git push origin main
