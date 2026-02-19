@@ -1,127 +1,89 @@
-Secure Company Lookup App
+# Secure Company Lookup App
 
-React (SPA) + ASP.NET Core Web API + OIDC
+React (SPA) + ASP.NET Core Web API + OIDC (Auth0)
 
-Overview
+---
 
-This project is a small full-stack web application where a user can:
+## Overview
 
-Log in using OAuth2 / OpenID Connect
+This project is a full-stack web application where a user can:
 
-Search for Norwegian companies
+- Log in using OAuth2 / OpenID Connect
+- Search for Norwegian companies
+- View company details
+- Access secured backend endpoints
 
-View basic company information
+---
 
-The solution consists of:
+## Tech Stack
 
-Frontend: React (Vite SPA)
+### Backend
+- ASP.NET Core 8 Web API
+- Clean service-layer architecture
+- JWT Bearer Authentication
+- HttpClient
+- Dependency Injection
 
-Backend: ASP.NET Core Web API
+### Frontend
+- React (Vite)
+- TypeScript
+- Auth0 React SDK
+- Axios
+- Responsive CSS Grid UI
 
-Authentication: Auth0 (OIDC, Authorization Code Flow with PKCE)
+### Authentication
+- Auth0 (OIDC)
+- Authorization Code Flow with PKCE
+- JWT access tokens
+- Refresh tokens enabled
 
-External Data Source: Brønnøysundregistrene (Enhetsregisteret – Open Data)
+### External Data Source
+- Brønnøysundregistrene – Enhetsregisteret (Open Data API)
 
-Architecture
+---
+
+# Architecture
+
 company-lookup-app/
 │
-├── backend/                 # ASP.NET Core Web API
-│   └── CleanCompanyApi/
+├── backend/
+│ └── CleanCompanyApi/
 │
 └── frontend/
-    └── company-frontend/    # React SPA (Vite)
+└── company-frontend/
 
 
-The frontend never calls the Norwegian open API directly.
+Important:
 
-All external API calls go through the backend.
+- The frontend never calls the Norwegian open API directly.
+- All external API calls go through the backend.
+- All backend endpoints are protected using JWT Bearer authentication.
 
-All backend endpoints are protected using JWT Bearer authentication.
+---
 
-Prerequisites
-Backend
+# Backend Setup
 
-.NET SDK 8.0
+## Prerequisites
 
-Visual Studio 2022 or dotnet CLI
+- .NET SDK 8.0
+- Visual Studio 2022 or dotnet CLI
 
-Frontend
+## Run Backend
 
-Node.js 18+
-
-npm (comes with Node)
-
-Authentication (OIDC)
-Provider
-
-Auth0 was used as the OpenID Connect provider.
-
-Flow
-
-Authorization Code Flow with PKCE (recommended for SPAs)
-
-JWT access tokens
-
-Refresh tokens enabled
-
-Tokens obtained
-
-access_token – used to call the backend API
-
-refresh_token – used to silently refresh the access token
-
-Token storage (client-side)
-
-Tokens are stored using the Auth0 React SDK
-
-Storage location: localStorage
-
-Trade-offs:
-
-✅ Enables silent token refresh
-
-❌ Slightly less secure than in-memory storage 
-
-Test Users
-
-Two test users are configured in Auth0.
-
-Example:
-
-(mentioned on email)
-
-(Passwords are configured in the Auth0 dashboard.)
-
-How to log in
-
-Open the frontend
-
-Click Login
-
-Authenticate using one of the test users
-
-After login, you are redirected back to the app
-
-Backend (ASP.NET Core Web API)
-How to run
+```bash
 cd backend/CleanCompanyApi
 dotnet restore
 dotnet run
-
-
-The API runs on:
+API runs on:
 
 https://localhost:7242
+Backend Authentication
+All endpoints are protected with:
 
-Authentication & Authorization
-
-All API endpoints are protected with JWT Bearer authentication
-
+[Authorize]
 The frontend sends:
 
 Authorization: Bearer <access_token>
-
-
 The backend validates:
 
 Issuer
@@ -132,254 +94,140 @@ Signature
 
 Expiration
 
-API Endpoints
+Backend Endpoints
 GET /api/me
-
-Returns basic information from the authenticated JWT.
-
-Example response:
-
-{
-  "authenticated": true,
-  "claims": [
-    { "type": "iss", "value": "https://<auth0-domain>/" },
-    { "type": "sub", "value": "<user-id>" },
-    { "type": "aud", "value": "https://company-api" }
-  ]
-}
+Returns JWT claims of the authenticated user.
 
 GET /api/companies?query=<text>
+Searches companies by name.
 
-Searches for Norwegian companies.
-
-Query parameter is required
-
-Returns 400 if missing or empty
-
-Calls Brønnøysundregistrene internally
-
-Maps the response to a simplified DTO
-
-Example response:
-
-[
-  {
-    "organizationNumber": "934045769",
-    "name": "TEST DA",
-    "organizationForm": "Ansvarlig selskap med delt ansvar",
-    "municipality": "DRAMMEN"
-  }
-]
+Returns 400 if query is missing.
 
 GET /api/companies/{orgnr}
-
-Fetches details for a single company by organization number.
+Fetches company by organization number.
 
 Error Handling
-
 External API failure → 502 Bad Gateway
 
 External API timeout → 504 Gateway Timeout
 
-Clear error messages are returned to the client
+Clear error messages returned
 
-No caching is used (per requirements)
+No caching used
 
-Norwegian Open Data API
+Frontend Setup (React + TypeScript)
+Prerequisites
+Node.js 18+
 
-Source: Brønnøysundregistrene – Enhetsregisteret
+npm
 
-No registration required
-
-Public open data API
-
-Endpoints used:
-
-GET /api/enheter
-
-GET /api/enheter/{orgnr}
-
-The backend normalizes external fields into a stable internal DTO before returning data to the frontend.
-
-Frontend (React SPA)
-How to run
+Run Frontend
 cd frontend/company-frontend
 npm install
 npm run dev
-
-
 Frontend runs on:
 
 http://localhost:5173
+TypeScript Setup
+If TypeScript is not installed:
 
-Functionality
-
-Login / Logout using OIDC
-
-Fetches access_token silently
-
-Calls backend with Authorization: Bearer <token>
-
-Company search UI:
-
-Search input
-
-Loading state
-
-Error state
-
-Results list
-
-Displayed fields:
-
-Company name
-
-Organization number
-
-Organization form
-
-Municipality
-
-Example Authenticated Request
-curl -k \
-  -H "Authorization: Bearer <ACCESS_TOKEN>" \
-  https://localhost:7242/api/companies?query=test
-
-What Works End-to-End
-
-✅ OAuth2 / OIDC login (Authorization Code Flow + PKCE)
-
-✅ JWT-secured backend
-
-✅ Protected endpoints
-
-✅ Norwegian open data API integration
-
-✅ React SPA consuming secured backend
-
-✅ Access + refresh tokens handled client-side
-
-What I Would Improve With More Time
-
-Add pagination to company search
-
-Add a dedicated company details page
-
-Improve UI styling and accessibility
-
-Add automated tests (unit + integration)
-
-Move token storage to in-memory with refresh fallback
-
-Add structured logging and correlation IDs
-
-Notes
-
-Swagger is disabled in production scenarios
-
-The backend root (/) intentionally returns 404
-
-All API interaction is done through secured endpoints
-
-Update V0.1
-
-
-
-# Clean Company API
-
-Full-stack company lookup application using:
-
-- ASP.NET Core Web API
-- Auth0 JWT Authentication
-- React (Vite)
-- TypeScript
-- Axios
-
----
-
-## 🔧 Backend Setup
-
-### 1️⃣ Navigate to backend folder
-
-```bash
-cd backend
-2️⃣ Install dependencies
-dotnet restore
-3️⃣ Run the API
-dotnet run
-Backend runs on:
-
-https://localhost:7242
-💻 Frontend Setup (TypeScript + Vite)
-1️⃣ Navigate to frontend folder
-cd frontend/company-frontend
-2️⃣ Install dependencies
-npm install
-3️⃣ Install TypeScript (if not installed)
 npm install --save-dev typescript @types/react @types/react-dom
-4️⃣ Run development server
-npm run dev
-Frontend runs on:
+Files using TypeScript:
 
-http://localhost:5173
-🔐 Auth0 Configuration
-In main.tsx:
+App.tsx
 
-<Auth0Provider
-  domain="YOUR_AUTH0_DOMAIN"
-  clientId="YOUR_CLIENT_ID"
-  authorizationParams={{
-    redirect_uri: window.location.origin,
-    audience: "https://company-api"
-  }}
->
-Make sure backend appsettings.json contains:
+CompanySearch.tsx
+
+main.tsx
+
+types.ts
+
+Auth0 Configuration
+Create a .env file inside:
+
+frontend/company-frontend/
+Add:
+
+VITE_AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
+VITE_AUTH0_CLIENT_ID=YOUR_CLIENT_ID
+VITE_AUTH0_AUDIENCE=https://company-api
+Do NOT commit .env.
+
+Ensure backend appsettings.json contains:
 
 "Auth0": {
   "Domain": "YOUR_AUTH0_DOMAIN",
   "Audience": "https://company-api"
 }
-🔎 Features
-Search companies by name
+Authentication Flow
+User logs in via Auth0
+
+Frontend requests access token with correct audience
+
+Token is attached to API calls
+
+Backend validates JWT
+
+Secure endpoints return data
+
+Example Authenticated Request
+curl -k \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  https://localhost:7242/api/companies?query=test
+What Works End-to-End
+OAuth2 / OIDC login (Authorization Code Flow + PKCE)
+
+JWT-secured backend
+
+Protected endpoints
+
+Norwegian open data API integration
+
+React SPA consuming secured backend
+
+Access + refresh tokens handled client-side
+
+Search by name
 
 Search by organization number
 
-Secure JWT-protected endpoints
-
-Clean service-layer architecture
-
 TypeScript frontend
 
-Responsive UI
+Clean service-layer backend architecture
 
-📦 Tech Stack
-Backend:
+Improvements (Future Work)
+Add pagination
 
-ASP.NET Core 8
+Add dedicated company details page
 
-JWT Bearer Authentication
+Improve UI accessibility
 
-HttpClient
+Add automated tests (unit + integration)
 
-Clean architecture service pattern
+Move token storage to in-memory with refresh fallback
 
-Frontend:
+Add structured logging
 
-React
+Add Docker support
 
-Vite
+Notes
+Swagger disabled in production scenarios
 
-TypeScript
+Backend root (/) intentionally returns 404
 
-Auth0 React SDK
+All API interaction is done through secured endpoints
 
-Axios
 
-🚀 Production Notes
-Enable strict ValidateAudience = true
+---
 
-Move secrets to environment variables
+# 🔥 NOW FIX GIT PROPERLY
 
-Enable HTTPS in production
+Since you had merge conflicts:
 
-Add error logging middleware
+Run:
+
+```bash
+git add README.md
+git commit -m "Resolve README merge conflict and clean documentation"
+git pull origin main --allow-unrelated-histories
+git push origin main

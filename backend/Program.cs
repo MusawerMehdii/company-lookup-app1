@@ -1,11 +1,21 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+<<<<<<< HEAD
 using CleanCompanyAPi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+=======
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Controllers
+builder.Services.AddControllers();
+
+// Auth0 JWT Authentication
+>>>>>>> 1bbcfe47eee900334074b6314ae64a563f03ca13
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -15,7 +25,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
+<<<<<<< HEAD
             ValidateAudience = false,
+=======
+            ValidateAudience = false, // M2M token – documented
+>>>>>>> 1bbcfe47eee900334074b6314ae64a563f03ca13
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true
         };
@@ -23,8 +37,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddHttpClient();
+<<<<<<< HEAD
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 
+=======
+>>>>>>> 1bbcfe47eee900334074b6314ae64a563f03ca13
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
